@@ -14,7 +14,7 @@ np.random.seed(0) #set the seed for the random number for debugging
 
 path = "./vdac1h_pc/" # define the path to the set of files to load using the MDA Universe
 file_name = "vdac1-dopc" # base file name to load
-traj = []
+traj = [] # create a list of the trajectory files to be loaded
 for i in range(0, 1001, 100):
     if i == 0:
         traj.append(path+file_name+'-'+str(i)+'to'+str(i+100)+'ns-100ps.dcd')
