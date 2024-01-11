@@ -14,8 +14,14 @@ np.random.seed(0) #set the seed for the random number for debugging
 
 path = "./vdac1h_pc/" # define the path to the set of files to load using the MDA Universe
 file_name = "vdac1-dopc" # base file name to load
+traj = []
+for i in range(0, 1001, 100):
+    if i == 0:
+        traj.append(path+file_name+'-'+str(i)+'to'+str(i+100)+'ns-100ps.dcd')
+    else:
+        traj.append(path+file_name+'-'+str(i+1)+'to'+str(i+100)+'ns-100ps.dcd')
 # load the trajectory using the MDA Universe environment
-u = mda.Universe(path + file_name + '.psf', [path + file_name + '-0to100ns-100ps.dcd', path + file_name + '-101to200ns-100ps.dcd', path + file_name + '-201to300ns-100ps.dcd',path + file_name + '-301to400ns-100ps.dcd',path + file_name + '-401to500ns-100ps.dcd',path + file_name + '-501to600ns-100ps.dcd',path + file_name + '-601to700ns-100ps.dcd',path + file_name + '-701to800ns-100ps.dcd',path + file_name + '-801to900ns-100ps.dcd',path + file_name + '-901to1000ns-100ps.dcd',path + file_name + '-1001to1100ns-100ps.dcd'])
+u = mda.Universe(path + file_name + '.psf', traj)
 
 # Create atom groups (this example uses the beta barrel of VDAC with the N terminus)
 aligner = align.AlignTraj(u, u,in_memory=True).run()
