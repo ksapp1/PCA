@@ -56,6 +56,7 @@ pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
 
 # project the original traj onto each of the first component to visualize the motion. Can repeat for each component (we put this into a for loop change nc to change the number of components to investigate) 
 nc = 5
+proj = mda.Merge(BetaBarrel)
 for i in range(nc):
     projected = np.outer(pca_space[:, i], pca_vdac.p_components[:, i]) + pca_vdac.mean.flatten()
     coordinates = projected.reshape(len(pca_space[:, i]), -1, 3)
@@ -69,7 +70,6 @@ for i in range(nc):
     Barrel_df = Barrel_df.assign(**new_data)
 
 # Can create a new universe of these projected coordinates
-    proj = mda.Merge(BetaBarrel)
     proj.load_new(coordinates, order="fac")
     proj.add_TopologyAttr('tempfactors')
 
