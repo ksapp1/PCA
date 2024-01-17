@@ -26,10 +26,8 @@ for i in range(0, 1001, 100):
         traj.append(path+file_name+'-'+str(i+1)+'to'+str(i+100)+'ns-100ps.dcd')
 u = mda.Universe(path + file_name + '.psf', traj) # load the trajectory using the MDA Universe environment              
 
-
 # Align the trajectory.                                                                                                 
-# Create an AtomGroup containing the desired atoms from the simulation that we want to perform PCA on. (this example us\
-es the beta barrel of VDAC without the N terminus and loops)                                                            
+# Create an AtomGroup containing the desired atoms from the simulation that we want to perform PCA on. (this example uses the beta barrel of VDAC without the N terminus and loops)                                                            
 
 n_term = " and not (resid 1:25)"
 loops = [34,38,48,52,64,68,76,79,88,94,104,108,120,122,132,135,146,148,158,163,175,177,185,188,197,201,212,215,228,230,\
@@ -64,8 +62,7 @@ dr = CA_center - pca_vdac.mean
 
 n_pcs = np.where(pca_vdac.cumulated_variance > 0.9)[0][0]
 
-# Transform the AtomGroup into reduced space (the weights over each component). The output has shape (n_frames, n_compo\
-nents)                                                                                                                  
+# Transform the AtomGroup into reduced space (the weights over each component). The output has shape (n_frames, n_components)                                                                                                                  
 
 pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
 
@@ -74,8 +71,7 @@ pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
 projected = np.outer(pca_space[:, 0], pca_vdac.p_components[:, 0]) + pca_vdac.mean.flatten()
 coordinates = projected.reshape(len(pca_space[:, 0]), -1, 3)
 
-# We can store information about each component as the beta value in the pdb. Here we use the raidial projection of the\
- component                                                                                                              
+# We can store information about each component as the beta value in the pdb. Here we use the raidial projection of the component                                                                                                              
 
 comp = pca_vdac.p_components[:,0].reshape(len(BetaBarrel),3)
 beta = dr[:,0]*comp[:,0] + dr[:,1]*comp[:,1]
