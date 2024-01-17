@@ -7,6 +7,7 @@ import pandas as pd
 from scipy import stats
 
 np.random.seed(0)  # set the seed for the random number                                                                 
+
 # # Load the trajectory using MDAnalysis                                                                                
 path = "./vdac1h_pc/" # define the path to the set of files to load using the MDA Universe                              
 file_name = "vdac1-dopc" # base file name to load                                                                       
@@ -37,7 +38,6 @@ Barrel_df = pd.DataFrame(np.array([BetaBarrel.resnames, BetaBarrel.resids, BetaB
 pca_vdac = pca.PCA(u, select="backbone" + ex_ids, align=True).run()
 
 # Determine the center of mass distance for each atom.
-
 CA = u.select_atoms("name CA")
 CA_center = np.zeros(3)
 i = 0
@@ -48,7 +48,6 @@ CA_center /= i
 dr = CA_center - pca_vdac.mean
 
 # Determine the number of components : here we keep the components that account for 90% of the variance                 
-
 n_pcs = np.where(pca_vdac.cumulated_variance > 0.9)[0][0]
 
 # Transform the AtomGroup into reduced space (the weights over each component). 
@@ -56,7 +55,6 @@ n_pcs = np.where(pca_vdac.cumulated_variance > 0.9)[0][0]
 pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
 
 # project the original traj onto each of the first component to visualize the motion. Can repeat for each component (we put this into a for loop change nc to change the number of components to investigate) 
-
 nc = 5
 for i in range(nc):
     projected = np.outer(pca_space[:, i], pca_vdac.p_components[:, i]) + pca_vdac.mean.flatten()
@@ -71,7 +69,6 @@ for i in range(nc):
     Barrel_df = Barrel_df.assign(**new_data)
 
 # Can create a new universe of these projected coordinates
-
     proj = mda.Merge(BetaBarrel)
     proj.load_new(coordinates, order="fac")
     proj.add_TopologyAttr('tempfactors')
