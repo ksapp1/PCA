@@ -90,4 +90,4 @@ proj1.atoms.tempfactors = bfactor_norm
 proj1.atoms.write(path + "comp1.pdb")
 proj1.atoms.write(path + "comp1.xtc", frames='all') # can write the traj to a new file (here we use XTC)                
 
-# This last section can be repeated for as many compnents as desired
+# This last section can be repeated for as many components as desired
