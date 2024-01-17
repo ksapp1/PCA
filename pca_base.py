@@ -27,19 +27,18 @@ for i in range(0, 1001, 100):
 u = mda.Universe(path + file_name + '.psf', traj) # load the trajectory using the MDA Universe environment              
 
 # Align the trajectory.                                                                                                 
-# Create an AtomGroup containing the desired atoms from the simulation that we want to perform PCA on. (this example uses the beta barrel of VDAC without the N terminus and loops)                                                            
+# Create an AtomGroup containing the desired atoms from the simulation that we want to perform PCA on. 
+# This example uses the beta barrel of VDAC without the N terminus and loops                                                    
 
 n_term = " and not (resid 1:25)"
-loops = [34,38,48,52,64,68,76,79,88,94,104,108,120,122,132,135,146,148,158,163,175,177,185,188,197,201,212,215,228,230,\
-238,241,252,254,265,273]
+loops = [34,38,48,52,64,68,76,79,88,94,104,108,120,122,132,135,146,148,158,163,175,177,185,188,197,201,212,215,228,230,238,241,252,254,265,273]
 ex_ids = n_term
 for i in range(0,len(loops),2):
     ex_ids += " and not (resid " + str(loops[i]) + ":" +str(loops[i+1]) + ")"
 aligner = align.AlignTraj(u, u, select="backbone" + ex_ids, in_memory=True).run()
 BetaBarrel = u.select_atoms("backbone" + ex_ids)
 # store the AtomGroup information in an data frame [resnames, ids, atom names]                                          
-Barrel_df = pd.DataFrame(np.array([BetaBarrel.resnames, BetaBarrel.resids, BetaBarrel.names]).T,columns=['resname', 're\
-sid', 'atom'])
+Barrel_df = pd.DataFrame(np.array([BetaBarrel.resnames, BetaBarrel.resids, BetaBarrel.names]).T,columns=['resname', 'resid', 'atom'])
 
 # # Run PCA on VDAC using MDAnalysis                                                                                    
 # Use the select argument to select the desired atoms (idealy the same as the AtomGroup above)                          
@@ -62,7 +61,8 @@ dr = CA_center - pca_vdac.mean
 
 n_pcs = np.where(pca_vdac.cumulated_variance > 0.9)[0][0]
 
-# Transform the AtomGroup into reduced space (the weights over each component). The output has shape (n_frames, n_components)                                                                                                                  
+# Transform the AtomGroup into reduced space (the weights over each component). 
+# The output has shape (n_frames, n_components)                                                                                                                  
 
 pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
 
