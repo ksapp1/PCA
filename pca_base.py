@@ -55,26 +55,27 @@ n_pcs = np.where(pca_vdac.cumulated_variance > 0.9)[0][0]
 # The output has shape (n_frames, n_components)                                                                                                                  
 pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
 
-# project the original traj onto each of the first component to visualize the motion. Can repeat for each component     
+# project the original traj onto each of the first component to visualize the motion. Can repeat for each component (we put this into a for loop change nc to change the number of components to investigate) 
 
-projected = np.outer(pca_space[:, 0], pca_vdac.p_components[:, 0]) + pca_vdac.mean.flatten()
-coordinates = projected.reshape(len(pca_space[:, 0]), -1, 3)
+nc = 5
+for i in range(nc):
+    projected = np.outer(pca_space[:, i], pca_vdac.p_components[:, i]) + pca_vdac.mean.flatten()
+    coordinates = projected.reshape(len(pca_space[:, i]), -1, 3)
 
 # We can store information about each component as the beta value in the pdb. Here we use the raidial projection of the component                                                                                                              
-comp = pca_vdac.p_components[:,0].reshape(len(BetaBarrel),3)
-beta = dr[:,0]*comp[:,0] + dr[:,1]*comp[:,1]
-bfactor_norm = beta/(2*np.absolute(beta).max()) + 0.5
+    comp = pca_vdac.p_components[:,i].reshape(len(BetaBarrel),3)
+    beta = dr[:,0]*comp[:,0] + dr[:,1]*comp[:,1]
+    bfactor_norm = beta/(2*np.absolute(beta).max()) + 0.5
 
-new_data = {'beta_1':beta, 'beta_norm_1':bfactor_norm}
-Barrel_df.assign(**new_data)
+    new_data = {'beta_'+str(i):beta, 'beta_norm_'+str(i):bfactor_norm}
+    Barrel_df = Barrel_df.assign(**new_data)
 
-# Can create a new universe of these projected coordinates                                                              
-proj1 = mda.Merge(BetaBarrel)
-proj1.load_new(coordinates, order="fac")
-proj1.add_TopologyAttr('tempfactors')
+# Can create a new universe of these projected coordinates
 
-proj1.atoms.tempfactors = bfactor_norm
-proj1.atoms.write(path + "comp1.pdb")
-proj1.atoms.write(path + "comp1.xtc", frames='all') # can write the traj to a new file (here we use XTC)                
+    proj = mda.Merge(BetaBarrel)
+    proj.load_new(coordinates, order="fac")
+    proj.add_TopologyAttr('tempfactors')
 
-# This last section can be repeated for as many components as desired
+    proj.atoms.tempfactors = bfactor_norm
+    proj.atoms.write(path + "comp"+str(i)+".pdb")
+    proj.atoms.write(path + "comp"+str(i)+".xtc", frames='all') # can write the traj to a new file (here we use XTC)                
