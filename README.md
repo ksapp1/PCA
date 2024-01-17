@@ -7,3 +7,7 @@ coordinates for the protein projected into the reduced space and saves the new t
 XTC files. 
 
 The script loads the psf file and all dcd files of an MD simulation. These are loaded using the Universe environment of the MDAnalysis package.
+
+References:
+ https://docs.mdanalysis.org/1.0.0/index.html 
+ https://userguide.mdanalysis.org/stable/examples/analysis/reduced_dimensions/pca.html
