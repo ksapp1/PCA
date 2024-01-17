@@ -1,13 +1,9 @@
 #!/opt/local/bin/python                                                                                                 
-# Load the necessary packages: numpy, scipy, MDAnalysis, sklearn, etc.                                                  
+# Load the necessary packages: numpy, scipy, MDAnalysis, etc.                                                  
 import numpy as np
 import MDAnalysis as mda
 from MDAnalysis.analysis import pca, align
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import train_test_split
-from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
 from scipy import stats
 
 np.random.seed(0)  # set the seed for the random number                                                                 
