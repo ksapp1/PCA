@@ -66,6 +66,8 @@ dr = CA_center - pca_vdac.mean
 # Determine the number of components : here we keep the components that account for 90% of the variance                 
 n_pcs = np.where(pca_vdac.cumulated_variance > 0.9)[0][0]
 
+path2 = args.dest # path for outputs
+
 # Transform the AtomGroup into reduced space (the weights over each component). 
 # The output has shape (n_frames, n_components)                                                                                                                  
 pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
@@ -73,7 +75,6 @@ pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
 # project the original traj onto each of the first component to visualize the motion. Can repeat for each component (we put this into a for loop change nc to change the number of components to investigate) 
 nc = 5
 proj = mda.Merge(BetaBarrel)
-path2 = args.dest
 for i in range(nc):
     projected = np.outer(pca_space[:, i], pca_vdac.p_components[:, i]) + pca_vdac.mean.flatten()
     coordinates = projected.reshape(len(pca_space[:, i]), -1, 3)
