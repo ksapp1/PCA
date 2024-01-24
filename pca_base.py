@@ -67,10 +67,12 @@ dr = CA_center - pca_vdac.mean
 n_pcs = np.where(pca_vdac.cumulated_variance > 0.9)[0][0]
 
 path2 = args.dest # path for outputs
+np.savetxt(path2 + "cum_var.txt",pca_vdac.cumulated_variance[:n_pcs], fmt="%1.8f")
 
 # Transform the AtomGroup into reduced space (the weights over each component). 
 # The output has shape (n_frames, n_components)                                                                                                                  
 pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
+np.savetxt(path + "trans_pca.txt", pca_space)
 
 # project the original traj onto each of the first component to visualize the motion. Can repeat for each component (we put this into a for loop change nc to change the number of components to investigate) 
 nc = 5
