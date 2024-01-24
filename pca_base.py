@@ -5,18 +5,31 @@ import MDAnalysis as mda
 from MDAnalysis.analysis import pca, align
 import pandas as pd
 from scipy import stats
+import os
+import re
+import argparse
 
 np.random.seed(0)  # set the seed for the random number                                                                 
 
+parser = argparse.ArgumentParser(prog="VDAC2",description="PCA analysis of VDAC2 in lipid environments")
+parser.add_argument("path")
+parser.add_argument("dest")
+args = parser.parse_args()
+
+def atoi(text):
+    return int(text) if text.isdigit() else text
+
+def natural_keys(text):
+    return [atoi(c) for c in re.split(r'(\d+)',text)]
+    
 # # Load the trajectory using MDAnalysis                                                                                
-path = "./vdac1h_pc/" # define the path to the set of files to load using the MDA Universe                              
-file_name = "vdac1-dopc" # base file name to load                                                                       
+path = args.path # define the path to the set of files to load using the MDA Universe                                                                    
 traj = [] # create a list of the trajectory files to be loaded                                                          
-for i in range(0, 1001, 100):
-    if i == 0:
-        traj.append(path+file_name+'-'+str(i)+'to'+str(i+100)+'ns-100ps.dcd')
-    else:
-        traj.append(path+file_name+'-'+str(i+1)+'to'+str(i+100)+'ns-100ps.dcd')
+for file in sorted(os.listdir(path), key=natural_keys):
+    if file.endswith(".dcd"):
+        traj.append(os.path.join(path, file))
+    if file.endswith(".psf"):
+        file_name = os.path.join(path, file)
 u = mda.Universe(path + file_name + '.psf', traj) # load the trajectory using the MDA Universe environment              
 
 # Align the trajectory.                                                                                                 
@@ -57,6 +70,7 @@ pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
 # project the original traj onto each of the first component to visualize the motion. Can repeat for each component (we put this into a for loop change nc to change the number of components to investigate) 
 nc = 5
 proj = mda.Merge(BetaBarrel)
+path2 = args.dest
 for i in range(nc):
     projected = np.outer(pca_space[:, i], pca_vdac.p_components[:, i]) + pca_vdac.mean.flatten()
     coordinates = projected.reshape(len(pca_space[:, i]), -1, 3)
@@ -74,5 +88,5 @@ for i in range(nc):
     proj.add_TopologyAttr('tempfactors')
 
     proj.atoms.tempfactors = bfactor_norm
-    proj.atoms.write(path + "comp"+str(i)+".pdb")
-    proj.atoms.write(path + "comp"+str(i)+".xtc", frames='all') # can write the traj to a new file (here we use XTC)                
+    proj.atoms.write(path2 + "comp"+str(i+1)+".pdb")
+    proj.atoms.write(path2 + "comp"+str(i+1)+".xtc", frames='all') # can write the traj to a new file (here we use XTC)                
