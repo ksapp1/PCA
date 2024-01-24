@@ -13,6 +13,8 @@ np.random.seed(0)  # set the seed for the random number
 
 parser = argparse.ArgumentParser(prog="VDAC2",description="PCA analysis of VDAC2 in lipid environments")
 parser.add_argument("path")
+parser.add_argument("struc_filetype")
+parser.add_argument("traj_filetype")
 parser.add_argument("dest")
 args = parser.parse_args()
 
@@ -22,14 +24,16 @@ def natural_keys(text):
     return [atoi(c) for c in re.split(r'(\d+)',text)]
     
 # # Load the trajectory using MDAnalysis                                                                                
-path = args.path # define the path to the set of files to load using the MDA Universe                                                                    
+path = args.path # define the path to the set of files to load using the MDA Universe 
+struc_file = "." + args.struc_filetype
+traj_file = "." + args.traj_filetype
 traj = [] # create a list of the trajectory files to be loaded                                                          
 for file in sorted(os.listdir(path), key=natural_keys):
-    if file.endswith(".dcd"):
+    if file.endswith(traj_file):
         traj.append(os.path.join(path, file))
-    if file.endswith(".psf"):
+    if file.endswith(struc_file):
         file_name = os.path.join(path, file)
-u = mda.Universe(path + file_name + '.psf', traj) # load the trajectory using the MDA Universe environment              
+u = mda.Universe(file_name, traj) # load the trajectory using the MDA Universe environment              
 
 # Align the trajectory.                                                                                                 
 # Create an AtomGroup containing the desired atoms from the simulation that we want to perform PCA on. 
