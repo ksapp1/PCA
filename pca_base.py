@@ -15,7 +15,6 @@ parser = argparse.ArgumentParser(prog="VDAC2",description="PCA analysis of VDAC2
 parser.add_argument("path")
 parser.add_argument("struc_filetype")
 parser.add_argument("traj_filetype")
-parser.add_argument("dest")
 parser.add_argument("var")
 args = parser.parse_args()
 
@@ -68,13 +67,12 @@ dr = CA_center - pca_vdac.mean
 var_cutoff = args.var
 n_pcs = np.where(pca_vdac.cumulated_variance > var_cutoff)[0][0]
 
-path2 = args.dest # path for outputs
-np.savetxt(path2 + "cum_var.txt",pca_vdac.cumulated_variance[:n_pcs], fmt="%1.8f")
+np.savetxt(path + "cum_var.txt",pca_vdac.cumulated_variance[:n_pcs], fmt="%1.8f")
 
 # Transform the AtomGroup into reduced space (the weights over each component). 
 # The output has shape (n_frames, n_components)                                                                                                                  
 pca_space = pca_vdac.transform(BetaBarrel, n_pcs)
-np.savetxt(path2 + "trans_pca.txt", pca_space)
+np.savetxt(path + "trans_pca.txt", pca_space)
 
 # project the original traj onto each of the first component to visualize the motion. Can repeat for each component (we put this into a for loop change nc to change the number of components to investigate) 
 nc = 5
