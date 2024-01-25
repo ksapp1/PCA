@@ -16,6 +16,7 @@ parser.add_argument("path")
 parser.add_argument("struc_filetype")
 parser.add_argument("traj_filetype")
 parser.add_argument("dest")
+parser.add_argument("var")
 args = parser.parse_args()
 
 def atoi(text):
@@ -64,7 +65,8 @@ CA_center /= i
 dr = CA_center - pca_vdac.mean
 
 # Determine the number of components : here we keep the components that account for 90% of the variance                 
-n_pcs = np.where(pca_vdac.cumulated_variance > 0.9)[0][0]
+var_cutoff = args.var
+n_pcs = np.where(pca_vdac.cumulated_variance > var_cutoff)[0][0]
 
 path2 = args.dest # path for outputs
 np.savetxt(path2 + "cum_var.txt",pca_vdac.cumulated_variance[:n_pcs], fmt="%1.8f")
