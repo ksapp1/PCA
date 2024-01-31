@@ -12,7 +12,7 @@ import argparse
 np.random.seed(0)  # set the seed for the random number                                                                 
 
 parser = argparse.ArgumentParser(prog="VDAC2",description="PCA analysis of VDAC2 in lipid environments")
-parser.add_argument("path")
+parser.add_argument("input")
 parser.add_argument("struc_filetype")
 parser.add_argument("traj_filetype")
 parser.add_argument("var")
