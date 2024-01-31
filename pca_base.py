@@ -64,7 +64,7 @@ CA_center /= i
 dr = CA_center - pca_vdac.mean
 
 # Determine the number of components : here we keep the components that account for 90% of the variance                 
-var_cutoff = args.var
+var_cutoff = float(args.var)
 n_pcs = np.where(pca_vdac.cumulated_variance > var_cutoff)[0][0]
 
 np.savetxt(path + "cum_var.txt",pca_vdac.cumulated_variance[:n_pcs], fmt="%1.8f")
