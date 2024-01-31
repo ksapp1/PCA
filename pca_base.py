@@ -25,8 +25,8 @@ def natural_keys(text):
     
 # # Load the trajectory using MDAnalysis                                                                                
 path = args.path # define the path to the set of files to load using the MDA Universe 
-struc_file = "." + args.struc_filetype
-traj_file = "." + args.traj_filetype
+struc_file = args.struc_filetype
+traj_file = args.traj_filetype
 traj = [] # create a list of the trajectory files to be loaded                                                          
 for file in sorted(os.listdir(path), key=natural_keys):
     if file.endswith(traj_file):
