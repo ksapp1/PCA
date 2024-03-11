@@ -15,6 +15,10 @@ USAGE:
 
 python PCA.py INPUT_PATH OUTPUT_PATH STRUCTURE_FILETYPE TRAJECTORY_FILETYPE VARIANCE_CUTOFF
 
+REQUIREMENTS:
+
+MDAnalysis, NumPy, SciPy, argparse, pandas
+
 REFERENCES:
 
  https://docs.mdanalysis.org/1.0.0/index.html 
